@@ -25,7 +25,7 @@ import requests
 
 
 ## =======[ Constants & Settings ]======= ##
-DEBUG = True
+DEBUG = False
 TDATE = f"{datetime.now():%Y-%m-%d}"      # "2022-02-15"
 APP_BASE = Path(__file__).resolve(strict=True).parent
 
@@ -258,8 +258,8 @@ def main():
         type=int, default=3900,
         help='The sleep time between checks, in seconds (default is 1 hour, 5 min)',
     )
-    parser.add_argument("--debug", action="store_true",
-                        help="Show debug messages for troubleshooting or verbosity")
+    # parser.add_argument("--debug", action="store_true",
+    #                     help="Show debug messages for troubleshooting or verbosity")
 
     args = parser.parse_args()
 
