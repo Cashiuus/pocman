@@ -2,10 +2,10 @@
 # ==============================================================================
 # File:         pocman.py
 # Author:       Cashiuus
-# Created:      15-May-2023     -     Revised:
+# Created:      15-May-2023     -     Revised: 20-Nov-2023
 #
 # ==============================================================================
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 __author__ = "Cashiuus"
 __license__ = "MIT"
 __copyright__ = "Copyright (C) 2023 Cashiuus"
@@ -16,6 +16,7 @@ import logging
 import os
 import sqlite3
 import sys
+import threading
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -75,10 +76,13 @@ def prettify_elapsed_time(seconds):
     return time_delta
 
 
+# --
+# The main part of this script
+# --
 
 class Pocman():
     """
-    POC Monitoring tool coined as Pacman
+    POC Monitoring tool, coined as "Pocman" (like "Pacman")
 
     Usage:
     bot = Pocman(cve=CVE-2023-2019, sleep_interval=1200)
@@ -247,7 +251,7 @@ def main():
     # log.debug('Logger initialized')
 
     # -- Args --
-    parser = argparse.ArgumentParser(description='Find GitHub PoCs for a specific CVE ID.')
+    parser = argparse.ArgumentParser(description='Find GitHub potential exploit PoCs for a specific CVE ID')
     parser.add_argument('cve', type=str, help='CVE ID to search for (ex: CVE-2023-44487)')
     # parser.add_argument('target', help='IP/CIDR/URL of target') # positional arg
     # parser.add_argument('-i', "--input_file", help="an input file")
