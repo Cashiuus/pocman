@@ -105,22 +105,23 @@ class Pocman():
 
 
     def is_daily_pending(self):
-        """ Check/set a daily flag that tracks sending or doing something once per day.
-            return True if the action is not yet completed and is pending
+        """
+        Check/set a daily flag that tracks sending or doing something once per day.
 
+        return True if the action is not yet completed and is pending
         """
         if self.run_daily_completed:
-            # True, we already did it
+            # True, we already did it; check if it's a new day since start
             if self.run_start_date != datetime.today().date():
-                print(f"Start Date: {self.run_start_date} -- Today: {datetime.today().date()}")
-                print("It is a new day")
+                # print(f"New Day -- Start Date: {self.run_start_date} -- Today: {datetime.today().date()}")
+                print("[*] Daily email is pending now that it is a new day")
                 return True
             else:
-                print("[!] Daily already run for today, not needed")
+                print("[*] Daily email already run for today, not needed")
                 return False
         else:
             # Else, not yet completed, do it
-            # print("[*] Daily is pending")
+            print("[*] Daily email is pending")
             return True
 
 
