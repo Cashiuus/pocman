@@ -34,6 +34,7 @@ from helpers import prettify_elapsed_time, convert_string_to_datetime
 DEBUG = False
 TDATE = f"{datetime.now():%Y-%m-%d}"      # "2022-02-15"
 APP_BASE = Path(__file__).resolve(strict=True).parent
+CVES_FILE = APP_BASE / "tracking_cves.txt"
 
 log = logging.getLogger(__name__)
 
@@ -401,10 +402,13 @@ def main():
     if args.cve:
         targets = args.cve
     else:
-        if os.path.isfile(APP_BASE / "tracking.txt"):
-            targets = load_targets_from_file(APP_BASE / "tracking.txt")
+        if os.path.isfile(CVES_FILE):
+            targets = load_targets_from_file(CVES_FILE)
         else:
-            print("[!] Must have a valid tracking.txt file with CVE's in it!")
+            print(f"[!] {CVES_FILE.name} does not yet exist, creating file now. Add CVEs to it to (one per line) use this capability!")
+            with open(CVES_FILE, 'w') as f:
+                pass
+            # Empty file is now created
             sys.exit(1)
 
     if not targets:

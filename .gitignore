@@ -5,3 +5,4 @@ venv/
 
 pocman.db
 settings.py
+tracking_cves.txt
