@@ -3,6 +3,7 @@
 
 import smtplib
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 import settings
 
@@ -99,7 +100,7 @@ class EmailSender():
         )
 
         if send_status != {}:
-            print(f"Response contains error message: {send_status}")
+            print(f"[ERR] Response contains error message: {send_status}")
 
 
     def shutdown(self):

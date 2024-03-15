@@ -223,7 +223,7 @@ class Pocman():
             table_data = f"\n{'Stars':<10}{'Language':<14}{'Last Pushed':<20}{'Name':<45}\n"
             table_data += "-" * 90 + '\n'
 
-            print(f"Processing CVE: {cve}")
+            # print(f"Processing CVE: {cve}")
             for parent in cve_results.values():
                 for repo in parent:
                     # print(f"{repo=}")
@@ -364,30 +364,21 @@ def main():
     """
     Main function of script when run directly, executing the primary purpose of this file.
     """
-    # -- Logging --
-    # ch = logging.StreamHandler()
-    # if DEBUG:
-    #     ch.setLevel(logging.DEBUG)
-    # else:
-    #     ch.setLevel(logging.INFO)
-    # datefmt = '%Y%m%d %I:%M:%S%p'
-    # formatter = logging.Formatter('%(asctime)s %(levelname)s %(name)s:%(funcName)s: %(message)s', datefmt=datefmt)
-    # ch.setFormatter(formatter)
-    # log.addHandler(ch)
-    # log.debug('Logger initialized')
-
     # -- Args --
-    parser = argparse.ArgumentParser(description='Find GitHub potential exploit PoCs for a specific CVE ID')
-    parser.add_argument('--cve',
-                        type=str,
-                        help='CVE ID to search for (ex: CVE-2023-44487)')
-    # parser.add_argument('target', help='IP/CIDR/URL of target') # positional arg
-    # parser.add_argument('-i', "--input_file", help="an input file")
-    # parser.add_argument("-i", "--input-file", dest='input', nargs='*',
-    #                     help="Specify one or more files, (process as a list)")
+    parser = argparse.ArgumentParser(description="Find potential exploit PoC's on GitHub for a specific CVE ID")
+    parser.add_argument(
+        '--cve',
+        type=str,
+        help='CVE ID to search for (ex: CVE-2023-44487)'
+    )
+    parser.add_argument(
+        '-i', "--input_file",
+        help="an input .txt file with a CVE ID on each new line"
+    )
     parser.add_argument(
         '-s', '--sleep_time',
-        type=int, default=3900,
+        type=int,
+        default=3900,
         help='The sleep time between checks, in seconds (default is 1 hour, 5 min)',
     )
     parser.add_argument(
@@ -399,21 +390,26 @@ def main():
     #                     help="Show debug messages for troubleshooting or verbosity")
 
     args = parser.parse_args()
+    first_run()
+
     targets = None
     if args.cve:
         targets = args.cve
+    elif args.input_file:
+        if os.path.isfile(args.input_file):
+            targets = load_targets_from_file(args.input_file)
     else:
         if os.path.isfile(CVES_FILE):
             targets = load_targets_from_file(CVES_FILE)
         else:
-            print(f"[!] {CVES_FILE.name} does not yet exist, creating file now. Add CVEs to it to (one per line) use this capability!")
+            print(f"[!] {CVES_FILE.name} does not yet exist, creating file now. Add CVEs to it (one per line) to start tracking!")
             with open(CVES_FILE, 'w') as f:
                 pass
             # Empty file is now created
             sys.exit(1)
 
     if not targets:
-        print("[!] targets is empty, check and try again!")
+        print("[!] targets list is empty, check and try again!")
         sys.exit(1)
 
     if args.enable_emails:
@@ -422,6 +418,7 @@ def main():
         toggle_email_sending = False
 
     # -- Main App Flow --
+
     # NOTE: Seconds <-> Hours Reference
     # 12 hours = 43200
     # 1 hour = 3600
